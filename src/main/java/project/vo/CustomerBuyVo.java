@@ -9,7 +9,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
-
 public class CustomerBuyVo {
     private int buy_idx;
     private String pcode;
