@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import jdbc.day1.OracleConnectionUtil;
 import project.vo.BuyVo;
 import project.vo.CustomerBuyVo;
 
@@ -122,8 +121,8 @@ public class TblBuyDao {
     public List<CustomerBuyVo> selectCustomerBuyList(String customid){
         List<CustomerBuyVo> list = new ArrayList<>();
         String sql = "SELECT BUY_IDX, tb.PCODE, PNAME, PRICE, QUANTITY, BUY_DATE FROM TBL_BUY tb JOIN TBL_PRODUCT tp ON tb.PCODE = tp.PCODE WHERE tb.CUSTOMID = ?";
-        Connection connection = OracleConnectionUtil.getConnection();
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = getConnection();
+        		PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, customid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -162,5 +161,26 @@ public class TblBuyDao {
         }
 
         return money;
+    }
+    
+    public List<BuyVo> allBuy(){
+    	List<BuyVo> list = new ArrayList<>();
+    	String sql = "SELECT * FROM TBL_BUY";
+    	try(Connection connection = getConnection();
+    			PreparedStatement ps = connection.prepareStatement(sql)) {
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				list.add(new BuyVo(rs.getInt(1),
+						rs.getString(2),
+						rs.getString(3),
+						rs.getInt(4),
+						rs.getDate(5)));
+				
+			}
+		} catch (SQLException e) {
+			System.out.println("ERROR : " + e.getMessage());
+		}
+    	return list;
     }
 }

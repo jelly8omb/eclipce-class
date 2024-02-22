@@ -10,23 +10,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jdbc.day1.OracleConnectionUtil;
 import project.vo.ProductVo;
 
 public class TblProductDao {
+	public static final String DRIVER = "oracle.jdbc.driver.OracleDriver";
     public static final String URL ="jdbc:oracle:thin:@//localhost:1521/xe";
     public static final String USERNAME = "c##idev";
     private static final String PASSWORD = "1234";
 
-    public Connection getConnection() throws SQLException{
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+    
+    
+    private Connection getConnection() throws SQLException {
+    	Connection conn = null;
+    	try {
+			Class.forName(DRIVER);
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+        return conn;
     }
 
     public List<ProductVo> getProductVo(String category){
         List<ProductVo> list = new ArrayList<>();
-        Connection connection = OracleConnectionUtil.getConnection();
+        
         String sql = "SELECT * FROM TBL_PRODUCT WHERE CATEGORY = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (Connection connection = getConnection();
+        		PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, category);
             ResultSet rc = pstmt.executeQuery();
             if (rc.next()) {
@@ -45,9 +55,10 @@ public class TblProductDao {
 
     public List<ProductVo> selectByPname(String pname){
         List<ProductVo> list = new ArrayList<>();
-        Connection connection = OracleConnectionUtil.getConnection();
+        
         String sql = "SELECT * FROM TBL_PRODUCT WHERE PNAME LIKE '%'|| ? ||'%' ORDER BY CATEGORY";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (Connection connection = getConnection();
+        		PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, pname);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -77,5 +88,39 @@ public class TblProductDao {
         }
         return map;
         
+    }
+    
+    public List<ProductVo> allProduct(){
+    	List<ProductVo> list = new ArrayList<>();
+    	String sql = "SELECT * FROM TBL_PRODUCT";
+    	try(Connection connection = getConnection();
+    			PreparedStatement ps = connection.prepareStatement(sql)) {
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				list.add(new ProductVo(rs.getString(1),
+										rs.getString(2),
+										rs.getString(3),
+										rs.getInt(4)));
+				
+			}
+		} catch (SQLException e) {
+			System.out.println("ERROR : " + e.getMessage());
+		}
+    	return list;
+    }
+    
+    public void insertPro(ProductVo vo) {
+    	String sql = "INSERT INTO TBL_PRODUCT VALUES(?,?,?,?)";
+    	try (Connection connection = getConnection();
+    			PreparedStatement ps = connection.prepareStatement(sql)){
+			ps.setString(1, vo.getPcode());
+			ps.setString(2, vo.getCategory());
+			ps.setString(3, vo.getPname());
+			ps.setInt(4, vo.getPrice());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("insertPro 실행 예외 발생 : " + e.getMessage());
+		}
     }
 }
