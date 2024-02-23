@@ -110,17 +110,21 @@ public class TblProductDao {
     	return list;
     }
     
-    public void insertPro(ProductVo vo) {
+    //리턴 타입 int : 정상 insert 완료 1 리턴, 그렇지 않으면 0
+    public int insertPro(ProductVo vo) {
+    	
     	String sql = "INSERT INTO TBL_PRODUCT VALUES(?,?,?,?)";
+    	int result = 0;
     	try (Connection connection = getConnection();
     			PreparedStatement ps = connection.prepareStatement(sql)){
 			ps.setString(1, vo.getPcode());
 			ps.setString(2, vo.getCategory());
 			ps.setString(3, vo.getPname());
 			ps.setInt(4, vo.getPrice());
-			ps.executeUpdate();
+			result = ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("insertPro 실행 예외 발생 : " + e.getMessage());
 		}
+    	return result;
     }
 }

@@ -1,6 +1,7 @@
 package servlet.day3;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,8 +47,19 @@ public class ProductReg extends HttpServlet{
 		logger.info("\t 입력 값 vo : {}",vo);
 		
 		TblProductDao dao = new TblProductDao();
-		dao.insertPro(vo);
+		int result = dao.insertPro(vo);
 		
-		resp.sendRedirect("products.cc");
+//		resp.sendRedirect("products.cc");
+		
+		String message = "상품 등록이 완료되었습니다.";
+		if(result == 0) message = "상품 등록 오류가 생겼습니다.";
+		
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = resp.getWriter();
+		out.print("<script>");
+		out.print("alert('"+message+"');");
+		out.print("location.href='products.cc';");
+		out.print("</script>");
+		
 	}
 }
