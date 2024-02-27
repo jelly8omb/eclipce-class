@@ -16,7 +16,7 @@
  	</select>
  	<!-- insert, update, delete 는 리턴타입 지정안합니다.(그래도 값은 리턴해줌) -->
  	<insert id="insert" parameterType="BuyDto">
- 		INSERT INTO TBL_BUY VALUES(buy_pk_seq.nextval, #{CUSTOMID}, #{PCODE}, #{QUANTITY}, sysdate)
+ 		INSERT INTO TBL_BUY VALUES(buy_pk_seq.nextval, #{customid}, #{pcode}, #{quantity}, sysdate)
  	</insert>
  	<update id="update" parameterType="java.util.Map">
  		UPDATE TBL_BUY SET QUANTITY = #{quantity} WHERE BUY_IDX = #{buy_idx}

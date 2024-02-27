@@ -17,31 +17,31 @@ public class MybatisCustomerDao {
 		
 	}
 	
-	public List<CustomerDto> selectAll(){
+	public List<CustomerDto> customAll(){
 		SqlSession sqlSession = sessionFactory.openSession();
-		List<CustomerDto> list = sqlSession.selectList("tblcustom.selectAll");
+		List<CustomerDto> list = sqlSession.selectList("tblcustom.customAll");
 		return list;
 	}
 	
-	public int insert(CustomerDto dto) {
+	public int insertCus(CustomerDto dto) {
 		SqlSession sqlSession = sessionFactory.openSession();
-		int result = sqlSession.insert("tblcustom.insert",dto);
+		int result = sqlSession.insert("tblcustom.insertCus",dto);
 		sqlSession.commit();
 		sqlSession.close();
 		return result;
 	}
 	
-	public int update(Map<String, Integer> map) {
+	public int updateCus(Map<String, Integer> map) {
 		SqlSession sqlSession = sessionFactory.openSession();
-		int result = sqlSession.update("tblcustom.update", map);
+		int result = sqlSession.update("tblcustom.updateCus", map);
 		sqlSession.commit();
 		sqlSession.close();
 		return result;
 	}
 	
-	public int delete(int age) {
+	public int deleteCus(int age) {
 		SqlSession sqlSession = sessionFactory.openSession();
-		int result = sqlSession.delete("tblcustom.delete",age);
+		int result = sqlSession.delete("tblcustom.deleteCus",age);
 		sqlSession.commit();
 		sqlSession.close();
 		return result;

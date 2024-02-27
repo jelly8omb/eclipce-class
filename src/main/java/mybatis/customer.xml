@@ -11,17 +11,17 @@
    -->
  <mapper namespace="tblcustom">
  <!-- 리턴타입이 List 일때에는 제너릭타입만 설정하면 된다. -->
- 	<select id="selectAll" resultType="CustomerDto">
- 		select * from tbl_custom order by buy_date desc
+ 	<select id="customAll" resultType="CustomerDto">
+ 		select * from tbl_custom order by reg_date desc
  	</select>
  	<!-- insert, update, delete 는 리턴타입 지정안합니다.(그래도 값은 리턴해줌) -->
- 	<insert id="insert" parameterType="CustomerDto">
- 		INSERT INTO tbl_custom VALUES(#{CUSTOMID}, #{NAME}, #{EMAIL}, #{AGE}, sysdate)
+ 	<insert id="insertCus" parameterType="CustomerDto">
+ 		INSERT INTO tbl_custom VALUES(#{customId}, #{name}, #{email}, #{age})
  	</insert>
- 	<update id="update" parameterType="java.util.Map">
- 		UPDATE tbl_custom SET EMAIL = #{EMAIL} WHERE CUSTOMID = #{CUSTOMID}
+ 	<update id="updateCus" parameterType="java.util.Map">
+ 		UPDATE tbl_custom SET email = #{email} WHERE customId = #{customId}
  	</update>
- 	<delete id="delete" parameterType="int">
- 		DELETE FROM tbl_custom WHERE CUSTOMID = #{CUSTOMID}
+ 	<delete id="deleteCus" parameterType="int">
+ 		DELETE FROM tbl_custom WHERE customId = #{customId}
  	</delete>
  </mapper>
